@@ -1,0 +1,380 @@
+package bankaccount;
+
+import javax.swing.JOptionPane;
+
+/**
+ *
+ * @author John Michael
+ */
+
+public class BankAccount {
+    private String accountNumber;
+    private double balance;
+
+    public BankAccount(String accountNumber, double balance) {
+        this.accountNumber = accountNumber;
+        this.balance = balance;
+    }
+
+    public void displayAccountInfo() {
+        JOptionPane.showMessageDialog(null,
+                "Account Number: " + accountNumber + "\nBalance: $" + String.format("%.2f", balance));
+    }
+
+    public void deposit(double amount) {
+        balance += amount;
+    }
+
+    public void withdraw(double amount) {
+        if (balance >= amount) {
+            balance -= amount;
+        } else {
+            JOptionPane.showMessageDialog(null, "Insufficient funds.");
+        }
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+}
+
+
+
+
+Bank
+
+
+
+package bankaccount;
+
+import javax.swing.JOptionPane;
+
+/**
+ *
+ * @author John Michael
+ */
+    public class Bank {
+    public void transferMoney(BankAccount from, BankAccount to, double amount) {
+        if (from.getBalance() >= amount) {
+            from.withdraw(amount);
+            to.deposit(amount);
+            JOptionPane.showMessageDialog(null, "Transfer of $" + amount + " completed successfully.");
+        } else {
+            JOptionPane.showMessageDialog(null, "Transfer failed: Insufficient funds.");
+        }
+    }
+}
+
+
+
+
+Bank App
+
+
+
+package bankaccount;
+
+import javax.swing.JOptionPane;
+
+/**
+ *
+ * @author John Michael
+ */
+public class BankApp {
+ 
+    public static void main(String[] args) {
+        BankAccount acc1 = new BankAccount("ACC001", 10000.00);
+        BankAccount acc2 = new BankAccount("ACC002", 5000.00);
+        Bank bank = new Bank();
+
+        JOptionPane.showMessageDialog(null, "Initial Account Details:");
+        acc1.displayAccountInfo();
+        acc2.displayAccountInfo();
+
+        String input = JOptionPane.showInputDialog("Enter amount to transfer from ACC001 to ACC002:");
+        double amount = Double.parseDouble(input);
+
+        bank.transferMoney(acc1, acc2, amount);
+
+        JOptionPane.showMessageDialog(null, "Account Details After Transfer:");
+        acc1.displayAccountInfo();
+        acc2.displayAccountInfo();
+    }
+}
+
+
+
+
+Book
+
+
+
+package bankaccount;
+
+import javax.swing.JOptionPane;
+
+/**
+ *
+ * @author John Michael
+ */
+public class Book {
+    private final String title;
+    private final String author;
+    private int copies;
+
+    public Book(String title, String author, int copies) {
+        this.title = title;
+        this.author = author;
+        this.copies = copies;
+    }
+
+    public void displayInfo() {
+        JOptionPane.showMessageDialog(null,
+                "Title: " + title + "\nAuthor: " + author + "\nCopies Available: " + copies);
+    }
+
+    public void decrementCopies(int count) {
+        if (copies >= count) {
+            copies -= count;
+        } else {
+            JOptionPane.showMessageDialog(null, "Not enough copies available.");
+        }
+    }
+}
+
+
+
+
+Library
+
+
+
+package bankaccount;
+
+import java.util.ArrayList;
+
+/**
+ *
+ * @author John Michael
+ */
+public class Library {
+    private final ArrayList<Book> books = new ArrayList<>();
+
+    public void addBook(Book book) {
+        books.add(book);
+    }
+
+    public void loanBook(Book book, int loanCount) {
+        book.decrementCopies(loanCount);
+    }
+
+    public void displayLibrary() {
+        for (Book book : books) {
+            book.displayInfo();
+        }
+    }
+
+    public ArrayList<Book> getBooks() {
+        return books;
+    }
+}
+
+
+
+
+
+Library App
+
+
+
+
+
+package bankaccount;
+
+import javax.swing.JOptionPane;
+
+/**
+ *
+ * @author John Michael
+ */
+public class LibraryApp {
+    public static void main(String[] args) {
+        Library library = new Library();
+
+        Book b1 = new Book("Cooking Book", "Alamat ng ibon", 4);
+        Book b2 = new Book("Ibon Adarn", "Si Juan Tamad", 3);
+        library.addBook(b1);
+        library.addBook(b2);
+
+        JOptionPane.showMessageDialog(null, "Library Inventory Before Loan:");
+        library.displayLibrary();
+
+        String input = JOptionPane.showInputDialog("Enter number of copies to loan for 'Ibon Adarna':");
+        int loanCount = Integer.parseInt(input);
+
+        library.loanBook(b2, loanCount);
+
+        JOptionPane.showMessageDialog(null, "Library Inventory After Loan:");
+        library.displayLibrary();
+    }
+}
+
+
+
+
+
+Student
+
+
+
+
+package bankaccount;
+
+import javax.swing.JOptionPane;
+
+/**
+ *
+ * @author John Michael
+ */
+public class Student {
+    private final String name;
+    private final int id;
+
+    public Student(String name, int id) {
+        this.name = name;
+        this.id = id;
+    }
+
+    public void displayInfo() {
+        JOptionPane.showMessageDialog(null, "Name: " + name + "\nID: " + id);
+    }
+
+    public String getName() {
+        return name;
+    }
+}
+
+
+
+
+Classroom
+
+
+
+package bankaccount;
+
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+
+/**
+ *
+ * @author John Michael
+ */
+public class Classroom {
+    private final String className;
+    private final ArrayList<Student> students = new ArrayList<>();
+
+    public Classroom(String className) {
+        this.className = className;
+    }
+
+    public void addStudent(Student student) {
+        students.add(student);
+    }
+
+    public void removeStudent(Student student) {
+        students.remove(student);
+    }
+
+    public void displayStudents() {
+        StringBuilder sb = new StringBuilder("Class: " + className + "\n");
+        for (Student s : students) {
+            sb.append("Name: ").append(s.getName()).append("\n");
+        }
+        JOptionPane.showMessageDialog(null, sb.toString());
+    }
+
+    public void transferStudent(Student student, Classroom toClass) {
+        if (students.contains(student)) {
+            this.removeStudent(student);
+            toClass.addStudent(student);
+            JOptionPane.showMessageDialog(null, student.getName() + " transferred to " + toClass.className);
+        } else {
+            JOptionPane.showMessageDialog(null, "Student not found in " + className);
+        }
+    }
+
+    public ArrayList<Student> getStudents() {
+        return students;
+    }
+}
+
+
+
+
+
+School App
+
+
+
+
+package bankaccount;
+
+import javax.swing.JOptionPane;
+
+/**
+ *
+ * @author John Michael
+ */
+public class SchoolApp {
+    public static void main(String[] args) {
+        Classroom classA = new Classroom("Class A");
+        Classroom classB = new Classroom("Class B");
+
+        Student s1 = new Student("Lucky", 1);
+        Student s2 = new Student("Tiii", 2);
+        Student s3 = new Student("Teko", 3);
+
+        classA.addStudent(s1);
+        classA.addStudent(s2);
+        classA.addStudent(s3);
+
+        JOptionPane.showMessageDialog(null, "Classroom Rosters Before Transfer:");
+        classA.displayStudents();
+        classB.displayStudents();
+
+        classA.transferStudent(s2, classB);
+
+        JOptionPane.showMessageDialog(null, "Classroom Rosters After Transfer:");
+        classA.displayStudents();
+        classB.displayStudents();
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
