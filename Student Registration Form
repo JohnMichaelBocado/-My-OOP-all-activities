@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
- */
 package studentregistration;
 
 import java.awt.Dimension;
@@ -41,7 +37,6 @@ public class StudentRegistrationForm extends JFrame {
         setLocationRelativeTo(null); // center the window
         setLayout(new FlowLayout(FlowLayout.LEFT, 15, 10));
 
-        // === Form Components ===
         add(new JLabel("Student ID:"));
         txtStudentID = new JTextField(15);
         add(txtStudentID);
@@ -64,15 +59,11 @@ public class StudentRegistrationForm extends JFrame {
         btnClear = new JButton("Clear Form");
         add(btnAdd);
         add(btnClear);
-
-        // === Table Model and JTable ===
         tableModel = new DefaultTableModel(new Object[]{"Student ID", "Name", "Age", "Course"}, 0);
         table = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setPreferredSize(new Dimension(550, 150));
         add(scrollPane);
-
-        // === Event Handling ===
         btnAdd.addActionListener(e -> addStudent());
         btnClear.addActionListener(e -> clearForm());
     }
@@ -83,7 +74,6 @@ public class StudentRegistrationForm extends JFrame {
         String age = txtAge.getText().trim();
         String course = (String) comboCourse.getSelectedItem();
 
-        // Validation
         if (id.isEmpty() || name.isEmpty() || age.isEmpty() || course.equals("Select Course")) {
             JOptionPane.showMessageDialog(this,
                     "Please fill in all fields and select a course.",
@@ -91,7 +81,6 @@ public class StudentRegistrationForm extends JFrame {
             return;
         }
 
-        // Optional: Validate age is numeric
         if (!age.matches("\\d+")) {
             JOptionPane.showMessageDialog(this,
                     "Age must be a valid number.",
@@ -99,9 +88,8 @@ public class StudentRegistrationForm extends JFrame {
             return;
         }
 
-        // Add to table
         tableModel.addRow(new Object[]{id, name, age, course});
-        clearForm(); // optional: clear form after adding
+        clearForm(); 
     }
 
     private void clearForm() {
