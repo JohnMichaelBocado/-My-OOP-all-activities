@@ -1,0 +1,119 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
+ */
+package studentregistration;
+
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import javax.swing.table.DefaultTableModel;
+
+/**
+ *
+ * @author John Michael
+ */
+
+public class StudentRegistrationForm extends JFrame {
+
+    private final JTextField txtStudentID;
+
+    private final JTextField txtName;
+    private final JTextField txtAge;
+    private final JComboBox<String> comboCourse;
+    private final JButton btnAdd;
+    private final JButton btnClear;
+    private final JTable table;
+    private final DefaultTableModel tableModel;
+
+    public StudentRegistrationForm() {
+        setTitle("Student Registration Form");
+        setSize(600, 400);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null); // center the window
+        setLayout(new FlowLayout(FlowLayout.LEFT, 15, 10));
+
+        // === Form Components ===
+        add(new JLabel("Student ID:"));
+        txtStudentID = new JTextField(15);
+        add(txtStudentID);
+
+        add(new JLabel("Name:"));
+        txtName = new JTextField(15);
+        add(txtName);
+
+        add(new JLabel("Age:"));
+        txtAge = new JTextField(5);
+        add(txtAge);
+
+        add(new JLabel("Course:"));
+        comboCourse = new JComboBox<>(new String[] {
+                "Select Course", "Computer Science", "Engineering", "Mathematics", "Information Technology"
+        });
+        add(comboCourse);
+
+        btnAdd = new JButton("Add Student");
+        btnClear = new JButton("Clear Form");
+        add(btnAdd);
+        add(btnClear);
+
+        // === Table Model and JTable ===
+        tableModel = new DefaultTableModel(new Object[]{"Student ID", "Name", "Age", "Course"}, 0);
+        table = new JTable(tableModel);
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setPreferredSize(new Dimension(550, 150));
+        add(scrollPane);
+
+        // === Event Handling ===
+        btnAdd.addActionListener(e -> addStudent());
+        btnClear.addActionListener(e -> clearForm());
+    }
+
+    private void addStudent() {
+        String id = txtStudentID.getText().trim();
+        String name = txtName.getText().trim();
+        String age = txtAge.getText().trim();
+        String course = (String) comboCourse.getSelectedItem();
+
+        // Validation
+        if (id.isEmpty() || name.isEmpty() || age.isEmpty() || course.equals("Select Course")) {
+            JOptionPane.showMessageDialog(this,
+                    "Please fill in all fields and select a course.",
+                    "Input Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Optional: Validate age is numeric
+        if (!age.matches("\\d+")) {
+            JOptionPane.showMessageDialog(this,
+                    "Age must be a valid number.",
+                    "Input Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Add to table
+        tableModel.addRow(new Object[]{id, name, age, course});
+        clearForm(); // optional: clear form after adding
+    }
+
+    private void clearForm() {
+        txtStudentID.setText("");
+        txtName.setText("");
+        txtAge.setText("");
+        comboCourse.setSelectedIndex(0);
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            new StudentRegistrationForm().setVisible(true);
+        });
+    }
+}
