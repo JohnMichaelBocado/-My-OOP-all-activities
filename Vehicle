@@ -1,0 +1,228 @@
+
+package vehicle;
+
+/**
+ *
+ * @author John Michael
+ */
+public abstract class Vehicle {
+    
+    protected String make;
+    protected String model;
+    protected double rentalPrice;
+
+    public Vehicle(String make, String model, double rentalPrice) {
+        this.make = make;
+        this.model = model;
+        this.rentalPrice = rentalPrice;
+    }
+
+    public void displayDetails() {
+        System.out.println("Vehicle Details:");
+        System.out.println("Make: " + make);
+        System.out.println("Model: " + model);
+        System.out.println("Rental Price per Day: PHP" + rentalPrice);
+    }
+
+    public double calculateRentalCost(int days) {
+        return rentalPrice * days;
+    }
+
+    public abstract void performMaintenance();
+
+    public double calculateDiscountedRentalCost(int days, double discountPercentage) {
+        double originalCost = calculateRentalCost(days);
+        double discountAmount = originalCost * (discountPercentage / 100);
+        return originalCost - discountAmount;
+    }
+}
+    
+
+
+
+TRUCK
+
+
+package vehicle;
+
+/**
+ *
+ * @author John Michael
+ */
+public class Truck extends Vehicle {
+    private final double payloadCapacity;
+
+    public Truck(String make, String model, double rentalPrice, double payloadCapacity) {
+        super(make, model, rentalPrice);
+        this.payloadCapacity = payloadCapacity;
+    }
+
+    @Override
+    public void displayDetails() {
+        super.displayDetails();
+        System.out.println("Payload Capacity: " + payloadCapacity + " tons");
+    }
+
+    @Override
+    public void performMaintenance() {
+        System.out.println("Checking payload systems and engine oil for the truck.");
+    }
+
+    @Override
+    public double calculateDiscountedRentalCost(int days, double discountPercentage) {
+        double cost = super.calculateDiscountedRentalCost(days, discountPercentage);
+        if (days > 3) {
+            cost *= 0.95;  
+        }
+        return cost;
+    }
+}
+
+
+
+
+CAR
+
+
+
+package vehicle;
+
+/**
+ *
+ * @author John Michael
+ */
+
+public class Car extends Vehicle {
+    private final int numberOfDoors;
+
+    public Car(String make, String model, double rentalPrice, int numberOfDoors) {
+        super(make, model, rentalPrice);
+        this.numberOfDoors = numberOfDoors;
+    }
+
+    @Override
+    public void displayDetails() {
+        super.displayDetails();  
+        System.out.println("Number of Doors: " + numberOfDoors);
+    }
+
+    @Override
+    public void performMaintenance() {
+        System.out.println("Performing general car maintenance.");
+    }
+}
+
+
+
+
+
+MOTORCYCLE
+
+
+
+package vehicle;
+
+/**
+ *
+ * @author John Michael
+ */
+public class Motorcycle extends Vehicle {
+    private final boolean hasHelmetRental;
+
+    public Motorcycle(String make, String model, double rentalPrice, boolean hasHelmetRental) {
+        super(make, model, rentalPrice);
+        this.hasHelmetRental = hasHelmetRental;
+    }
+
+    @Override
+    public void displayDetails() {
+        super.displayDetails();
+        System.out.println("Helmet Rental Available: " + (hasHelmetRental ? "Yes" : "No"));
+    }
+
+    @Override
+    public void performMaintenance() {
+        System.out.println("Inspecting brakes and tire pressure for the motorcycle.");
+    } 
+}
+
+
+
+
+ELECTRICCAR
+
+
+
+package vehicle;
+
+/**
+ *
+ * @author John Michael
+ */
+public class ElectricCar extends Vehicle {
+    private final double batteryCapacity; 
+
+    public ElectricCar(String make, String model, double rentalPrice, double batteryCapacity) {
+        super(make, model, rentalPrice);
+        this.batteryCapacity = batteryCapacity;
+    }
+
+    @Override
+    public void displayDetails() {
+        super.displayDetails();
+        System.out.println("Battery Capacity: " + batteryCapacity + " kWh");
+    }
+
+    public void displayBatteryInfo() {
+        System.out.println("This electric car has a battery capacity of " + batteryCapacity + " kWh.");
+    }
+
+    @Override
+    public void performMaintenance() {
+        System.out.println("Checking battery health and charging system for the electric car.");
+    }
+}
+
+
+
+
+
+RENTALSYSTEMTEST
+
+
+package vehicle;
+
+/**
+ *
+ * @author John Michael
+ */
+public class RentalSystemTest {
+    public static void main(String[] args) {
+        Vehicle[] vehicles = new Vehicle[5];
+
+        vehicles[0] = new Car("Ferrari", "Super nova", 10000, 9000); 
+        vehicles[1] = new Truck("Jimny", "Optimus Prime", 5000, 2500); 
+        vehicles[2] = new Motorcycle("Rusi 150", "Nmax 155", 4000, true); 
+        vehicles[3] = new ElectricCar("Tesla", "E-bike", 1000, 750); 
+        vehicles[4] = new Car("Tamaraw Fx ", "Civic", 450, 400); 
+
+        int rentalDays = 5;
+        double discountPercentage = 15.0; 
+
+        for (Vehicle v : vehicles) {
+            if (v != null) { 
+                v.displayDetails();
+                System.out.println("Rental Cost for " + rentalDays + " days: PHP" + v.calculateRentalCost(rentalDays));
+                System.out.println("Discounted Rental Cost: PHP" + v.calculateDiscountedRentalCost(rentalDays, discountPercentage));
+                v.performMaintenance();
+                System.out.println("-----------------------------");
+            } else {
+                System.out.println("Vehicle is not available in the array.");
+            }
+        }
+    }
+}
+
+
+
+
